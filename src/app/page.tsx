@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+
 // Reusable Components
 const Button = ({ 
   children, variant = 'primary', className, ...props 
@@ -38,14 +39,14 @@ const SectionHeading = ({ badge, title, subtitle }: { badge?: string, title: Rea
     )}
     <motion.h2 
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
-      className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance leading-[1.1]"
+      className="text-5xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance leading-[1.1]"
     >
       {title}
     </motion.h2>
     {subtitle && (
       <motion.p 
         initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-        className="mt-6 text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl text-grad-subtitle font-medium"
+        className="mt-6 text-lg md:text-3xl text-slate-500 leading-relaxed max-w-2xl text-grad-subtitle font-medium"
       >
         {subtitle}
       </motion.p>
@@ -83,9 +84,14 @@ const AnimatedNumber = ({ value }: { value: number }) => {
   return <span ref={ref}>{displayValue.toLocaleString()}</span>;
 };
 
+
 export default function Page() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
   const heroRef = useRef<HTMLElement>(null);
   const portfolioRef = useRef<HTMLElement>(null);
+
   
   const { scrollYProgress: portfolioScroll } = useScroll({
     target: portfolioRef,
@@ -96,7 +102,16 @@ export default function Page() {
   const x2 = useTransform(portfolioScroll, [0, 1], ["-20%", "10%"]);
 
   return (
-    <main className="min-h-screen bg-transparent selection:bg-[var(--accent-color)]/30 selection:text-[var(--accent-color)]">
+    <main ref={containerRef} className="min-h-screen relative bg-transparent selection:bg-[var(--accent-color)]/30 selection:text-[var(--accent-color)]">
+
+      {/* Animated Scroll Progress Line */}
+      <div className="fixed left-4 md:left-8 top-0 bottom-0 w-[2px] bg-slate-200/50 z-50 pointer-events-none hidden md:block">
+        <motion.div 
+          className="w-full bg-[var(--accent-gradient)] origin-top shadow-[0_0_10px_var(--accent-color)]"
+          style={{ scaleY, height: '100%' }}
+        />
+      </div>
+
 
       {/* Modern Floating Header */}
       <motion.header 
@@ -104,18 +119,18 @@ export default function Page() {
         className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4"
       >
         <nav className="glass px-6 py-3 rounded-full flex items-center justify-between w-full max-w-5xl shadow-lg shadow-slate-200/50">
-          <div className="flex items-center gap-2 font-black text-xl tracking-tighter">
+          <div className="flex items-center gap-2 font-black text-3xl tracking-tighter">
             <div className="w-8 h-8 rounded-lg bg-[var(--accent-color)] flex items-center justify-center text-white">K</div>
             KreativRoom.
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <div className="hidden md:flex items-center gap-8 text-base font-semibold text-slate-600">
             {['Services', 'Results', 'Portfolio', 'Process'].map(item => (
               <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-slate-900 transition-colors">
                 {item}
               </a>
             ))}
           </div>
-          <Button variant="primary" className="px-5 py-2.5 text-sm h-10">
+          <Button variant="primary" className="px-5 py-2.5 text-base h-10">
             Book a Call <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
         </nav>
@@ -126,21 +141,21 @@ export default function Page() {
         <div className="max-w-5xl mx-auto text-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 border border-slate-200/50 text-[var(--accent-color)] text-sm font-semibold mb-8 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 border border-slate-200/50 text-[var(--accent-color)] text-base font-semibold mb-8 backdrop-blur-sm"
           >
             <Sparkles className="w-4 h-4" /> The Premium Editing Agency
           </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-balance leading-[1.05] mb-8"
+            className="text-7xl md:text-8xl lg:text-8xl font-black tracking-tighter text-balance leading-[1.05] mb-8"
           >
             Build Your <span className="text-gradient">Premium</span> <br className="hidden md:block"/> Personal Brand.
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto mb-10 text-balance leading-relaxed text-grad-subtitle font-medium"
+            className="text-3xl md:text-3xl text-slate-500 max-w-3xl mx-auto mb-10 text-balance leading-relaxed text-grad-subtitle font-medium"
           >
             We handle the scripting, editing, and strategy so you can focus on closing deals and coaching clients.
           </motion.p>
@@ -157,17 +172,27 @@ export default function Page() {
             </Button>
           </motion.div>
 
-          {/* Social Proof Badges under Hero */}
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 1 }}
-            className="mt-16 flex flex-wrap justify-center gap-4 md:gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+          {/* Social Proof Marquee under Hero */}
+          <div className="mt-20 overflow-hidden relative w-full flex items-center h-20"
+            style={{ maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)' }}
           >
-            {['Top Rated on Fiverr', '10+ Years Experience', '500+ Delivered', '4.9/5 Average Rating'].map((badge, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm font-bold text-slate-800">
-                <BadgeCheck className="w-5 h-5 text-[var(--accent-color)]" /> {badge}
-              </div>
-            ))}
-          </motion.div>
+            <motion.div 
+              initial={{ x: 0 }}
+              animate={{ x: "-50%" }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+              className="flex whitespace-nowrap gap-8 w-max opacity-70 hover:opacity-100 transition-opacity duration-500"
+            >
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-8">
+                  {['Top Rated on Fiverr', '10+ Years Experience', '500+ Delivered', '4.9/5 Average Rating', 'Fast Delivery', 'High Retention Rates', 'Premium Quality', 'Global Clients'].map((badge, j) => (
+                    <div key={j} className="flex items-center gap-2 text-base font-bold text-slate-800">
+                      <BadgeCheck className="w-5 h-5 text-[var(--accent-color)]" /> {badge}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -244,7 +269,7 @@ export default function Page() {
                 </div>
                 <div className="absolute bottom-6 left-6 text-white">
                   <div className="text-xs font-bold tracking-wider mb-1 opacity-80 uppercase">Reel Style {i}</div>
-                  <div className="flex items-center gap-1 text-sm font-semibold">
+                  <div className="flex items-center gap-1 text-base font-semibold">
                     <TrendingUp className="w-4 h-4 text-[var(--accent-color)]" /> 100k+ Views
                   </div>
                 </div>
@@ -252,28 +277,7 @@ export default function Page() {
             ))}
           </motion.div>
 
-          {/* Row 2 (Moves opposite direction) */}
-          <motion.div style={{ x: x2 }} className="flex gap-6 w-max ml-[-30vw] px-[10vw]">
-            {[7, 8, 9, 10, 11, 12].map((i) => (
-               <div key={i} className="relative w-[280px] sm:w-[320px] aspect-[9/16] rounded-3xl overflow-hidden glass-card group cursor-pointer shadow-xl shadow-slate-200/50">
-               <div className="absolute inset-0 bg-slate-100">
-                 <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1516280440502-39055cbd2819?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 ease-out" />
-               </div>
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-16 h-16 rounded-full glass flex items-center justify-center">
-                    <Play className="w-6 h-6 text-white fill-white ml-1" />
-                  </div>
-               </div>
-               <div className="absolute bottom-6 left-6 text-white">
-                 <div className="text-xs font-bold tracking-wider mb-1 opacity-80 uppercase">Client Edit {i}</div>
-                 <div className="flex items-center gap-1 text-sm font-semibold">
-                   <TrendingUp className="w-4 h-4 text-[var(--accent-color)]" /> 50k+ Views
-                 </div>
-               </div>
-             </div>
-            ))}
-          </motion.div>
+          
         </div>
       </section>
 
@@ -296,7 +300,7 @@ export default function Page() {
                 <div className="w-12 h-12 rounded-2xl bg-[var(--accent-color)]/10 text-[var(--accent-color)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                   {stat.icon}
                 </div>
-                <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">
+                <h3 className="text-5xl md:text-5xl font-black text-slate-900 mb-2 tracking-tight">
                   <AnimatedNumber value={stat.value} />
                   {stat.suffix}
                 </h3>
@@ -326,8 +330,8 @@ export default function Page() {
               <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center mb-8 shadow-xl">
                 <Scissors className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-slate-900">Premium Short Form</h3>
-              <p className="text-slate-500 text-base leading-relaxed max-w-md mb-8">
+              <h3 className="text-3xl font-bold mb-4 text-slate-900">Premium Short Form</h3>
+              <p className="text-slate-500 text-lg leading-relaxed max-w-md mb-8">
                 TikToks, Reels, and Shorts edited with high-end motion graphics, engaging B-roll, and perfect pacing to maximize retention.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -349,8 +353,8 @@ export default function Page() {
                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[var(--accent-color)] flex items-center justify-center mb-8 shadow-md group-hover:scale-110 transition-transform duration-500">
                   <PenTool className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900">Scripting & Strategy</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <h3 className="text-3xl font-bold mb-4 text-slate-900">Scripting & Strategy</h3>
+                <p className="text-slate-500 text-lg leading-relaxed">
                   We write high-converting scripts tailored to your niche, focusing on viral frameworks and strong calls to action.
                 </p>
               </div>
@@ -364,8 +368,8 @@ export default function Page() {
                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[var(--accent-color)] flex items-center justify-center mb-8 shadow-md group-hover:scale-110 transition-transform duration-500">
                   <LayoutDashboard className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900">Content Funnels</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <h3 className="text-3xl font-bold mb-4 text-slate-900">Content Funnels</h3>
+                <p className="text-slate-500 text-lg leading-relaxed">
                   Converting views into leads. We structure your content strategy to drive traffic where it matters.
                 </p>
             </motion.div>
@@ -378,8 +382,8 @@ export default function Page() {
               <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[var(--accent-color)] flex items-center justify-center mb-8 shadow-md group-hover:scale-110 transition-transform duration-500">
                 <Video className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-slate-900">Long Form YouTube</h3>
-              <p className="text-slate-500 text-base leading-relaxed max-w-lg">
+              <h3 className="text-3xl font-bold mb-4 text-slate-900">Long Form YouTube</h3>
+              <p className="text-slate-500 text-lg leading-relaxed max-w-lg">
                 Documentary-style editing, podcast cuts, and educational content designed to build deep parasocial relationships and authority.
               </p>
             </motion.div>
@@ -411,11 +415,11 @@ export default function Page() {
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 className="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative group hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 z-10"
               >
-                <div className="text-6xl md:text-7xl font-black text-slate-50 mb-6 group-hover:text-[var(--accent-color)]/5 transition-colors duration-300">
+                <div className="text-7xl md:text-8xl font-black text-slate-50 mb-6 group-hover:text-[var(--accent-color)]/5 transition-colors duration-300">
                   {process.step}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{process.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{process.desc}</p>
+                <h3 className="text-3xl font-bold text-slate-900 mb-3">{process.title}</h3>
+                <p className="text-slate-500 text-lg leading-relaxed">{process.desc}</p>
                 
                 {/* Connecting Line (Desktop Only) - Passes between cards */}
                 {i < 3 && (
@@ -443,15 +447,15 @@ export default function Page() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               className="glass-card p-10 rounded-[2.5rem] flex flex-col border border-slate-200"
             >
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Starter</h3>
-              <p className="text-slate-500 text-sm mb-6 pb-6 border-b border-slate-100">The Execution Plan</p>
+              <h3 className="text-3xl font-bold text-slate-900 mb-2">Starter</h3>
+              <p className="text-slate-500 text-base mb-6 pb-6 border-b border-slate-100">The Execution Plan</p>
               <div className="mb-8 flex items-baseline gap-2">
-                <span className="text-5xl font-black text-slate-900">$799</span>
+                <span className="text-5xl font-black text-slate-900">$<AnimatedNumber value={799} /></span>
                 <span className="text-slate-500 font-medium">/mo</span>
               </div>
               <ul className="space-y-4 mb-10 flex-1">
                 {['12 Premium Reels (3/week)', 'High-End Animations', 'Custom Captions', '2 Revision Rounds'].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
+                  <li key={i} className="flex items-start gap-3 text-base text-slate-600 font-medium">
                     <Check className="w-5 h-5 text-[var(--accent-color)] shrink-0" /> {feature}
                   </li>
                 ))}
@@ -467,15 +471,15 @@ export default function Page() {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--accent-gradient)] text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                 Recommended
               </div>
-              <h3 className="text-2xl font-bold mb-2 mt-2 text-white">Growth</h3>
-              <p className="text-slate-400 text-sm mb-6 pb-6 border-b border-slate-800">The Strategy & Growth Plan</p>
+              <h3 className="text-3xl font-bold mb-2 mt-2 text-white">Growth</h3>
+              <p className="text-slate-400 text-base mb-6 pb-6 border-b border-slate-800">The Strategy & Growth Plan</p>
               <div className="mb-8 flex items-baseline gap-2">
-                <span className="text-5xl font-black text-white">$1,499</span>
+                <span className="text-5xl font-black text-white">$<AnimatedNumber value={1499} /></span>
                 <span className="text-slate-400 font-medium">/mo</span>
               </div>
               <ul className="space-y-4 mb-10 flex-1">
                 {['16 Strategic Reels (4/week)', 'Niche Research & Hooks', 'Custom Scriptwriting', 'Premium Video Editing', 'Unlimited Revisions'].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-300 font-medium">
+                  <li key={i} className="flex items-start gap-3 text-base text-slate-300 font-medium">
                     <Check className="w-5 h-5 text-[var(--accent-color)] shrink-0" /> {feature}
                   </li>
                 ))}
@@ -488,15 +492,15 @@ export default function Page() {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
               className="glass-card p-10 rounded-[2.5rem] flex flex-col border border-slate-200"
             >
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Authority</h3>
-              <p className="text-slate-500 text-sm mb-6 pb-6 border-b border-slate-100">The Full Funnel Plan</p>
+              <h3 className="text-3xl font-bold text-slate-900 mb-2">Authority</h3>
+              <p className="text-slate-500 text-base mb-6 pb-6 border-b border-slate-100">The Full Funnel Plan</p>
               <div className="mb-8 flex items-baseline gap-2">
-                <span className="text-5xl font-black text-slate-900">$2,499</span>
+                <span className="text-5xl font-black text-slate-900">$<AnimatedNumber value={2499} /></span>
                 <span className="text-slate-500 font-medium">/mo</span>
               </div>
               <ul className="space-y-4 mb-10 flex-1">
                 {['25 Authority Reels (6/week)', 'Full Brand Strategy', 'Content Funnel Design', '48-Hour Delivery', 'Priority Slack Support'].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
+                  <li key={i} className="flex items-start gap-3 text-base text-slate-600 font-medium">
                     <Check className="w-5 h-5 text-[var(--accent-color)] shrink-0" /> {feature}
                   </li>
                 ))}
@@ -511,14 +515,14 @@ export default function Page() {
       {/* FOOTER */}
       <footer className="py-12 px-6 border-t border-slate-200/60 glass-card">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 font-black text-xl tracking-tighter">
+          <div className="flex items-center gap-2 font-black text-3xl tracking-tighter">
             <div className="w-6 h-6 rounded-md bg-[var(--accent-color)] flex items-center justify-center text-white text-xs">K</div>
             KreativRoom.
           </div>
-          <p className="text-slate-500 text-sm font-medium text-center md:text-left">
+          <p className="text-slate-500 text-base font-medium text-center md:text-left">
             © {new Date().getFullYear()} KreativRoom. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm font-semibold text-slate-600">
+          <div className="flex gap-6 text-base font-semibold text-slate-600">
             <a href="#" className="hover:text-slate-900">Twitter</a>
             <a href="#" className="hover:text-slate-900">Instagram</a>
             <a href="#" className="hover:text-slate-900">LinkedIn</a>
