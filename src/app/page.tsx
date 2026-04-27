@@ -230,11 +230,11 @@ const ProcessCard = ({ index, step, scrollYProgress, mobileMode = false }: { ind
 // --- HeroFormPanel ---
 
 const HERO_STEPS = [
-  { label: "On Boarding",  desc: "Client intake & creative brief",  color: "#F59E0B", bg: "rgba(245,158,11,0.15)" },
-  { label: "We Research",  desc: "Niche, hooks & script strategy",   color: "#3B82F6", bg: "rgba(59,130,246,0.15)"  },
-  { label: "You Shoot",    desc: "Raw footage — phone is enough",    color: "#8B5CF6", bg: "rgba(139,92,246,0.15)" },
-  { label: "We Edit",      desc: "Premium post-production magic",    color: "#1400FF", bg: "rgba(20,0,255,0.15)"   },
-  { label: "You Grow 🚀",  desc: "Content goes live & converts",    color: "#10B981", bg: "rgba(16,185,129,0.15)" },
+  { label: "On Boarding", desc: "Client intake & creative brief", color: "#F59E0B", bg: "rgba(245,158,11,0.15)" },
+  { label: "We Research", desc: "Niche, hooks & script strategy", color: "#3B82F6", bg: "rgba(59,130,246,0.15)" },
+  { label: "You Shoot", desc: "Raw footage — phone is enough", color: "#8B5CF6", bg: "rgba(139,92,246,0.15)" },
+  { label: "We Edit", desc: "Premium post-production magic", color: "#1400FF", bg: "rgba(20,0,255,0.15)" },
+  { label: "You Grow 🚀", desc: "Content goes live & converts", color: "#10B981", bg: "rgba(16,185,129,0.15)" },
 ];
 
 const HeroFormPanel = () => {
@@ -289,7 +289,7 @@ const HeroFormPanel = () => {
             display: 'flex', alignItems: 'center', gap: '8px',
           }}>
             <div style={{ display: 'flex', gap: '7px' }}>
-              {['#FF5F57','#FFBD2E','#28CA41'].map(c => (
+              {['#FF5F57', '#FFBD2E', '#28CA41'].map(c => (
                 <div key={c} style={{ width: 12, height: 12, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
               ))}
             </div>
@@ -305,7 +305,7 @@ const HeroFormPanel = () => {
             </div>
             <div style={{ color: 'white', fontSize: '18px', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '18px' }}>
               Workflow in Progress
-              <motion.span animate={{ opacity: [1,0,1] }} transition={{ repeat: Infinity, duration: 1.2 }}>...</motion.span>
+              <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1.2 }}>...</motion.span>
             </div>
 
             {/* Step rows — FIXED height to prevent layout shift (5 × 62px + 4 × 10px gap = 350px, +10px buffer) */}
@@ -415,7 +415,7 @@ const HeroFormPanel = () => {
         }}>
           {/* Mini title bar */}
           <div style={{ background: 'rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.15)', padding: '11px 16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {['#FF5F57','#FFBD2E','#28CA41'].map(c => (
+            {['#FF5F57', '#FFBD2E', '#28CA41'].map(c => (
               <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, boxShadow: `0 0 5px ${c}` }} />
             ))}
             <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '11px', fontWeight: 700, marginLeft: '6px', letterSpacing: '0.04em' }}>KreativRoom · Dashboard</span>
@@ -424,7 +424,7 @@ const HeroFormPanel = () => {
             <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '9px', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '4px' }}>Your Content Journey</div>
             <div style={{ color: 'white', fontSize: '15px', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '14px' }}>
               Workflow in Progress
-              <motion.span animate={{ opacity: [1,0,1] }} transition={{ repeat: Infinity, duration: 1.2 }}>...</motion.span>
+              <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1.2 }}>...</motion.span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', height: '292px', overflow: 'hidden' }}>
               <AnimatePresence>
@@ -443,7 +443,7 @@ const HeroFormPanel = () => {
                       </div>
                       {isDone
                         ? <span style={{ fontSize: '10px', fontWeight: 800, color: '#10B981', background: 'rgba(16,185,129,0.18)', padding: '3px 8px', borderRadius: '20px', border: '1px solid rgba(16,185,129,0.3)', whiteSpace: 'nowrap' }}>Done ✓</span>
-                        : <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 800, color: step.color, whiteSpace: 'nowrap' }}><motion.div animate={{ scale: [1,1.5,1] }} transition={{ repeat: Infinity, duration: 0.8 }} style={{ width: 5, height: 5, borderRadius: '50%', background: step.color }} />Active</div>}
+                        : <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 800, color: step.color, whiteSpace: 'nowrap' }}><motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 0.8 }} style={{ width: 5, height: 5, borderRadius: '50%', background: step.color }} />Active</div>}
                     </motion.div>
                   );
                 })}
@@ -487,16 +487,16 @@ const VideoCard = ({ project }: { project: { title: string, videoId: string, vie
   }, [isPlaying]);
 
   return (
-    <div 
+    <div
       className="group relative w-[300px] h-[533px] md:w-[350px] md:h-[622px] rounded-[40px] overflow-hidden shrink-0 bg-[#1A1A1A] shadow-xl cursor-pointer pointer-events-auto"
       onClick={() => setIsPlaying(true)}
     >
       {!isPlaying ? (
         <>
-          <img 
-            src={`https://i.ytimg.com/vi/${project.videoId}/maxresdefault.jpg`} 
-            alt={project.title} 
-            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+          <img
+            src={`https://i.ytimg.com/vi/${project.videoId}/maxresdefault.jpg`}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
             onError={(e) => { e.currentTarget.src = `https://i.ytimg.com/vi/${project.videoId}/hqdefault.jpg`; }}
           />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -521,9 +521,9 @@ const VideoCard = ({ project }: { project: { title: string, videoId: string, vie
           />
           <div className="absolute top-0 left-0 right-0 h-24 bg-transparent z-20 pointer-events-auto" />
           <div className="absolute bottom-0 right-0 w-full h-24 bg-transparent z-20 pointer-events-auto" />
-          
+
           {/* Close button */}
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); setIsPlaying(false); }}
             className="absolute top-6 right-6 z-50 w-10 h-10 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-colors cursor-pointer"
           >
@@ -717,8 +717,8 @@ export default function Page() {
       </motion.header>
 
       {/* 2. HERO SECTION */}
-      <section 
-        className="relative z-20 flex flex-col min-h-screen overflow-hidden" 
+      <section
+        className="relative z-20 flex flex-col min-h-screen overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #1400ff 0%, #796eff 100%)' }}
       >
 
@@ -768,7 +768,7 @@ export default function Page() {
             </svg>
           </motion.div>
           {/* Subtle grid */}
-          <motion.div 
+          <motion.div
             className="absolute inset-[-100px] opacity-[0.04]"
             animate={{ x: [0, -60], y: [0, -60] }}
             transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
@@ -806,50 +806,59 @@ export default function Page() {
             {/* Small label */}
             <motion.p
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="text-white/70 text-sm font-bold uppercase tracking-widest mb-3 md:mb-5"
+              className="text-white/70 text-[17px] font-bold uppercase tracking-[0.2em] mb-3"
             >
-              No Need to Waste Your Time
+              India&apos;s leading
             </motion.p>
 
-            {/* Headline */}
+            {/* Headline — two visual lines */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-black tracking-tighter leading-[1.0] mb-4 md:mb-6 text-white"
+              className="font-black tracking-tighter text-white mb-5 md:mb-6"
               style={{ textShadow: '0 4px 24px rgba(0,0,0,0.25)' }}
             >
-              UGC that{' '}
-              <motion.span
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  whiteSpace: 'nowrap',
-                  background: '#ffffff',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
-                  borderRadius: '0.25em',
-                  /* Top Right Bottom Left padding - Bottom has more to account for 'g' descender */
-                  padding: '0.15em 0.35em 0.25em 0.35em',
-                  margin: '0 0.05em',
-                  lineHeight: 1.1,
-                }}
-              >
-                <span
+              {/* Line 1: "Personal Branding [Agency]" — all inline, no wrap on desktop */}
+              <span className="flex items-center flex-wrap lg:flex-nowrap justify-center lg:justify-start gap-x-3 gap-y-2 text-[2.2rem] sm:text-[2.6rem] md:text-[3rem] lg:text-[2.8rem] leading-[1.08]">
+                <span className="whitespace-nowrap">Personal Branding</span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   style={{
-                    paddingRight: '2px',
-                    display: 'inline',
-                    background: 'linear-gradient(135deg, #1400FF 0%, #796eff 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    background: '#ffffff',
+                    boxShadow: '0 6px 28px rgba(0,0,0,0.22)',
+                    borderRadius: '0.3em',
+                    padding: '0.08em 0.38em 0.12em 0.38em',
+                    lineHeight: 1,
+                    flexShrink: 0,
                   }}
                 >
-                  grows
-                </span>
-              </motion.span>
-              <br />your brand.
+                  <span
+                    style={{
+                      display: 'inline',
+                      background: 'linear-gradient(135deg, #1400FF 0%, #796eff 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      fontWeight: 900,
+                      paddingRight: '2px',
+                      paddingBottom: '13px'
+                    }}
+                  >
+                    Agency
+                  </span>
+                </motion.span>
+              </span>
+
+              {/* Line 2: "for Smart Founders" */}
+              <span
+                className="block text-[1.8rem] sm:text-[2.2rem] md:text-[2.5rem] lg:text-[2.4rem] leading-[1.08] mt-3 text-center lg:text-left"
+                style={{ opacity: 0.88 }}
+              >
+                for Smart Founders
+              </span>
             </motion.h1>
 
             {/* Stacked avatars + client count */}
@@ -859,7 +868,7 @@ export default function Page() {
             >
               <div className="flex -space-x-2.5">
                 {['/q1.png', '/q2.png', '/q3.png', '/q4.jpg', '/q5.jpg'].map((src, i) => (
-                  <img key={i} src={src} alt={`client-${i+1}`} className="w-10 h-10 rounded-full border-2 border-white/50 shrink-0 object-cover" />
+                  <img key={i} src={src} alt={`client-${i + 1}`} className="w-10 h-10 rounded-full border-2 border-white/50 shrink-0 object-cover" />
                 ))}
               </div>
               <span className="text-white font-bold text-sm opacity-90">20+ Satisfied Clients</span>
@@ -1050,7 +1059,7 @@ export default function Page() {
                   { src: '/q10.jpg' },
                 ].map((item, i) => (
                   <div key={`${pass}-${i}`} className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-md flex-shrink-0 overflow-hidden">
-                    <img src={item.src} alt={`client-${i+1}`} className="w-full h-full object-cover" />
+                    <img src={item.src} alt={`client-${i + 1}`} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </React.Fragment>
@@ -1316,9 +1325,11 @@ export default function Page() {
               <React.Fragment key={i}>
                 {[
                   {
-                    title: "We increased our audience by 25%!", quote: "We can bring in real-life problems and have the coaches give specific examples and solutions to help guide us and remove any roadblocks.", author: "Aftab Khan", role: "mrminertech", stars: 5 },
+                    title: "We increased our audience by 25%!", quote: "We can bring in real-life problems and have the coaches give specific examples and solutions to help guide us and remove any roadblocks.", author: "Aftab Khan", role: "mrminertech", stars: 5
+                  },
                   {
-                    title: "Our engagement went up fast", quote: "KreativRoom helped us understand what content actually works. Our engagement grew and posting finally feels intentional.", author: "Louis Gleeson", role: "louisgson", stars: 4 },
+                    title: "Our engagement went up fast", quote: "KreativRoom helped us understand what content actually works. Our engagement grew and posting finally feels intentional.", author: "Louis Gleeson", role: "louisgson", stars: 4
+                  },
                   { title: "We finally have a clear content direction", quote: "Before them we were posting randomly. Now we have clear ideas clear messaging and a plan that makes sense.", author: "Adam Stewart", role: "adamstewartmarketing", stars: 5 },
                   { title: "Social media feels less stressful now", quote: "They break things down in a simple way. We know what to post why we post it and how it helps our brand grow.", author: "VinMatano", role: "vinmatano", stars: 4 },
                   { title: "We saw real growth not just likes", quote: "Our audience grew and so did the quality of conversations. They helped us focus on connection not just numbers.", author: "Sayan", role: "sayanify", stars: 5 },
@@ -1459,7 +1470,7 @@ export default function Page() {
                 </div>
                 <div className="space-y-4">
                   <div className="text-white/70 uppercase tracking-widest text-xs font-bold mb-6">Connect</div>
-                <div><a href="https://www.instagram.com/diptimaisahoo4/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-[#1A1A1A] font-bold transition-colors">Instagram</a></div>
+                  <div><a href="https://www.instagram.com/diptimaisahoo4/?hl=en" target="_blank" rel="noopener noreferrer" className="hover:text-[#1A1A1A] font-bold transition-colors">Instagram</a></div>
                   <div><a href="https://www.linkedin.com/in/kreativroom2" target="_blank" rel="noopener noreferrer" className="hover:text-[#1A1A1A] font-bold transition-colors">LinkedIn</a></div>
                 </div>
               </div>
