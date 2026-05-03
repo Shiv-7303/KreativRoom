@@ -97,6 +97,311 @@ const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number, pr
 };
 
 
+
+// ─── Pricing Toggle Component ────────────────────────────────────────────────
+const PLANS = {
+  monthly: [
+    {
+      name: 'Basic',
+      tagline: 'For beginners & small brands who need execution, not strategy.',
+      price: 899,
+      reels: '10 Reels',
+      ytVideos: '',
+      features: [
+        'Premium editing only',
+        'Hook optimization',
+        'Subtitles + reel covers',
+        '2-platform repurposing (IG → Shorts)',
+        'Fast delivery & revisions',
+      ],
+      cta: 'Get Basic Plan',
+      highlight: false,
+      badge: null,
+    },
+    {
+      name: 'Advanced',
+      tagline: 'For personal brands, coaches & businesses who want reach + positioning.',
+      price: 1699,
+      reels: '16 Reels',
+      ytVideos: '+ 2 YT videos',
+      features: [
+        'Content & hook strategy',
+        'Structured scripting support',
+        'Premium video editing',
+        'IG & YouTube management',
+        '4 Platforms repurposing',
+        'YouTube SEO optimization',
+        'Up to 1M+ views (90 days)',
+      ],
+      cta: 'Get Advanced Plan',
+      highlight: true,
+      badge: 'Most Popular',
+    },
+    {
+      name: 'Premium',
+      tagline: 'For founders, coaches, consultants & high-ticket businesses.',
+      price: 2899,
+      reels: '25 Reels',
+      ytVideos: '+ 4 YT videos',
+      features: [
+        'Full personal brand strategy',
+        'Done-for-you scripting',
+        'Premium editing on all videos',
+        'Multi-platform management',
+        'YouTube SEO + channel growth',
+        'Monthly strategy call',
+        'Up to 5M+ views (90 days)',
+      ],
+      cta: 'Get Premium Plan',
+      highlight: false,
+      badge: null,
+    },
+  ],
+  yearly: [
+    {
+      name: 'Basic',
+      tagline: 'For beginners & small brands who need execution, not strategy.',
+      price: 800,
+      reels: '15 Reels',
+      ytVideos: '',
+      features: [
+        'Premium editing only',
+        'Hook optimization',
+        'Subtitles + reel covers',
+        '2-platform repurposing (IG → Shorts)',
+        'Fast delivery & revisions',
+      ],
+      cta: 'Get Basic Plan',
+      highlight: false,
+      badge: null,
+    },
+    {
+      name: 'Advanced',
+      tagline: 'For personal brands, coaches & businesses who want reach + positioning.',
+      price: 1529,
+      reels: '20 Reels',
+      ytVideos: '+ 3 YT videos',
+      features: [
+        'Content & hook strategy',
+        'Structured scripting support',
+        'Premium video editing',
+        'IG & YouTube management',
+        '4 Platforms repurposing',
+        'YouTube SEO optimization',
+        'Up to 1M+ views (90 days)',
+      ],
+      cta: 'Get Advanced Plan',
+      highlight: true,
+      badge: 'Most Popular',
+    },
+    {
+      name: 'Premium',
+      tagline: 'For founders, coaches, consultants & high-ticket businesses.',
+      price: 2600,
+      reels: '30 Reels',
+      ytVideos: '+ 6 YT videos',
+      features: [
+        'Full personal brand strategy',
+        'Done-for-you scripting',
+        'Premium editing on all videos',
+        'Multi-platform management',
+        'YouTube SEO + channel growth',
+        'Monthly strategy call',
+        'Up to 5M+ views (90 days)',
+      ],
+      cta: 'Get Premium Plan',
+      highlight: false,
+      badge: null,
+    },
+  ],
+};
+
+// Animated price that counts up/down on plan change
+const AnimatedPrice = ({ value }: { value: number }) => {
+  const [display, setDisplay] = useState(value);
+  const prev = useRef(value);
+
+  useEffect(() => {
+    const from = prev.current;
+    const to = value;
+    prev.current = value;
+    if (from === to) return;
+
+    const duration = 500;
+    const steps = 30;
+    const stepTime = duration / steps;
+    const diff = to - from;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      const progress = step / steps;
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setDisplay(Math.round(from + diff * eased));
+      if (step >= steps) { setDisplay(to); clearInterval(timer); }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return <span>{display.toLocaleString()}</span>;
+};
+
+// Animated reel count that counts up/down
+const AnimatedReelCount = ({ value, label }: { value: number; label: string }) => {
+  const [display, setDisplay] = useState(value);
+  const prev = useRef(value);
+
+  useEffect(() => {
+    const from = prev.current;
+    const to = value;
+    prev.current = value;
+    if (from === to) return;
+
+    const duration = 500;
+    const steps = 25;
+    const stepTime = duration / steps;
+    const diff = to - from;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      const progress = step / steps;
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(from + diff * eased));
+      if (step >= steps) { setDisplay(to); clearInterval(timer); }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return <>{display} {label}</>;
+};
+
+const PricingToggle = () => {
+  const [isYearly, setIsYearly] = useState(false);
+  const plans = isYearly ? PLANS.yearly : PLANS.monthly;
+
+  // Parse reel count from string like "15 Reels"
+  const getReelCount = (reelStr: string) => parseInt(reelStr.split(' ')[0], 10);
+  const getYTCount = (ytStr: string) => {
+    if (!ytStr) return 0;
+    const m = ytStr.match(/(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  };
+  const monthlyPlans = PLANS.monthly;
+
+  return (
+    <>
+      {/* Toggle */}
+      <div className="flex items-center justify-center gap-4 mb-12">
+        <span className={`font-bold text-base transition-colors ${!isYearly ? 'text-[#1A1A1A]' : 'text-[#888]'}`}>Monthly</span>
+        <button
+          onClick={() => setIsYearly(!isYearly)}
+          className={`relative w-16 h-8 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1400FF] ${isYearly ? 'bg-[#1400FF]' : 'bg-[#D0D0D0]'}`}
+          aria-label="Toggle billing period"
+        >
+          <motion.span
+            layout
+            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            className="absolute top-1 w-6 h-6 bg-white rounded-full shadow-md"
+            style={{ left: isYearly ? '34px' : '2px' }}
+          />
+        </button>
+        <span className={`font-bold text-base transition-colors flex items-center gap-2 ${isYearly ? 'text-[#1A1A1A]' : 'text-[#888]'}`}>
+          Yearly
+          <span className="text-xs font-black text-white bg-[#1400FF] px-2 py-0.5 rounded-full">10% OFF</span>
+        </span>
+      </div>
+
+      {isYearly && (
+        <motion.p
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center text-[#555] font-medium mb-8 -mt-6"
+        >
+          More content = more visibility = faster results. That&apos;s why our long-term clients grow faster.
+        </motion.p>
+      )}
+
+      {/* Cards */}
+      <div className="grid md:grid-cols-3 gap-8">
+        {plans.map((plan, i) => {
+          const mPlan = monthlyPlans[i];
+          const reelVal = getReelCount(plan.reels);
+          const mReelVal = getReelCount(mPlan.reels);
+          const ytVal = getYTCount(plan.ytVideos);
+          const mYtVal = getYTCount(mPlan.ytVideos);
+
+          if (plan.highlight) {
+            return (
+              <div key={plan.name} className="bg-[#1A1A1A] text-white p-10 rounded-[40px] border border-[#1400FF] shadow-[0_0_40px_rgba(20,0,255,0.4)] relative hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#1400FF] to-[#796eff] text-white text-xs font-bold uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap">{plan.badge}</div>
+                <h3 className="text-3xl font-black mb-2 text-[#1400FF]">{plan.name}</h3>
+                <p className="text-white/60 font-medium mb-6 pb-6 border-b border-white/20 text-sm leading-relaxed">{plan.tagline}</p>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-2xl font-black text-white">$</span>
+                  <span className="text-6xl font-black text-white"><AnimatedPrice value={plan.price} /></span>
+                  <span className="text-white/50 font-bold">/mo</span>
+                </div>
+                <ul className="space-y-3 mb-10">
+                  <li className="flex items-start gap-3 font-medium text-white text-sm">
+                    <Check className="w-4 h-4 text-[#1400FF] shrink-0 mt-0.5" />
+                    <AnimatedReelCount value={reelVal} label="Reels" />
+                    {ytVal > 0 && <>&nbsp;+&nbsp;<AnimatedReelCount value={ytVal} label="YT videos" /></>}
+                  </li>
+                  {plan.features.map((f, fi) => (
+                    <li key={fi} className="flex items-start gap-3 font-medium text-white text-sm">
+                      <Check className="w-4 h-4 text-[#1400FF] shrink-0 mt-0.5" />{f}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=contact@kreativroom.com&su=Inquiry:%20${plan.name}%20Plan`, '_blank')}
+                  className="w-full h-14 text-base font-black rounded-full bg-gradient-to-r from-[#1400FF] to-[#796eff] text-white hover:opacity-90 transition-opacity"
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            );
+          }
+
+          return (
+            <DottedContainer key={plan.name} as="div" className="bg-white p-10 rounded-[40px] border border-[#E0E0E0] shadow-xl hover:shadow-[0_0_20px_rgba(20,0,255,0.15)] transition-shadow duration-300 h-full">
+              <h3 className="text-3xl font-black mb-2">{plan.name}</h3>
+              <p className="text-[#4A4A4A] font-medium mb-6 pb-6 border-b border-[#E0E0E0] text-sm leading-relaxed">{plan.tagline}</p>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-2xl font-black">$</span>
+                <span className="text-6xl font-black"><AnimatedPrice value={plan.price} /></span>
+                <span className="text-[#4A4A4A] font-bold">/mo</span>
+              </div>
+              <ul className="space-y-3 mb-10">
+                <li className="flex items-start gap-3 font-medium text-[#1A1A1A] text-sm">
+                  <Check className="w-4 h-4 text-[#1400FF] shrink-0 mt-0.5" />
+                  <AnimatedReelCount value={reelVal} label="Reels" />
+                  {ytVal > 0 && <>&nbsp;+&nbsp;<AnimatedReelCount value={ytVal} label="YT videos" /></>}
+                </li>
+                {plan.features.map((f, fi) => (
+                  <li key={fi} className="flex items-start gap-3 font-medium text-[#1A1A1A] text-sm">
+                    <Check className="w-4 h-4 text-[#1400FF] shrink-0 mt-0.5" />{f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=contact@kreativroom.com&su=Inquiry:%20${plan.name}%20Plan`, '_blank')}
+                className="w-full h-14 text-base font-black rounded-full border-2 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300"
+              >
+                {plan.cta}
+              </button>
+            </DottedContainer>
+          );
+        })}
+      </div>
+    </>
+  );
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const DottedContainer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { as?: React.ElementType }>(({ children, className, as: Component = "section", ...props }, ref) => {
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -1366,60 +1671,8 @@ export default function Page() {
             <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-[#1A1A1A]">Flexible pricing for every stage</h2>
           </SectionReveal>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Starter Plan */}
-            <SectionReveal>
-              <DottedContainer as="div" className="bg-white p-10 rounded-[40px] border border-[#E0E0E0] shadow-xl hover:shadow-[0_0_20px_rgba(20,0,255,0.15)] transition-shadow duration-300 h-full">
-                <h3 className="text-3xl font-black mb-2">Starter</h3>
-                <p className="text-[#4A4A4A] font-medium mb-8 pb-8 border-b border-[#E0E0E0]">Best for early-stage brands & campaigns</p>
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-6xl font-black">$799</span>
-                  <span className="text-[#4A4A4A] font-bold">/mo</span>
-                </div>
-                <ul className="space-y-4 mb-10">
-                  {['12 Premium Reels', 'High-End Animations', 'Custom Captions', 'Hook Optimization', 'Retention Editing', '2 Revision Rounds'].map((f, i) => (
-                    <li key={i} className="flex items-center gap-3 font-medium text-[#1A1A1A]"><Check className="w-5 h-5 text-[#1400FF]" />{f}</li>
-                  ))}
-                </ul>
-                <Button onClick={() => window.open('https://mail.google.com/mail/?view=cm&fs=1&to=contact@kreativroom.com&su=Inquiry:%20Starter%20Plan&body=Hi%20KreativRoom%20Team,%0A%0AI%20am%20interested%20in%20the%20Starter%20Plan.%20Please%20let%20me%20know%20how%20to%20proceed.%0A%0AThanks!', '_blank')} variant="outline" className="w-full h-16 text-lg">Get Starter Plan</Button>
-              </DottedContainer>
-            </SectionReveal>
-
-            {/* Growth Plan */}
-            <SectionReveal className="bg-[#1A1A1A] text-white p-10 rounded-[40px] border border-[#1400FF] shadow-[0_0_40px_rgba(20,0,255,0.4)] relative hover:-translate-y-2 transition-all duration-300">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#1400FF] to-[#796eff] text-white text-xs font-bold uppercase tracking-widest px-6 py-2 rounded-full shadow-lg">Recommended</div>
-              <h3 className="text-3xl font-black mb-2 text-[#1400FF]">Growth</h3>
-              <p className="text-white/70 font-medium mb-8 pb-8 border-b border-white/20">Best for scaling brands & creators</p>
-              <div className="flex items-baseline gap-1 mb-8">
-                <span className="text-6xl font-black">$1,499</span>
-                <span className="text-white/50 font-bold">/mo</span>
-              </div>
-              <ul className="space-y-4 mb-10">
-                {['16 Strategic Reels', 'Niche Research', 'Custom Scriptwriting', 'Advanced Hook Strategy', 'Premium Editing', 'Unlimited Revisions'].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 font-medium text-white"><Check className="w-5 h-5 text-[#1400FF]" />{f}</li>
-                ))}
-              </ul>
-              <Button onClick={() => window.open('https://mail.google.com/mail/?view=cm&fs=1&to=contact@kreativroom.com&su=Inquiry:%20Growth%20Plan&body=Hi%20KreativRoom%20Team,%0A%0AI%20am%20interested%20in%20the%20Growth%20Plan.%20Please%20let%20me%20know%20how%20to%20proceed.%0A%0AThanks!', '_blank')} variant="accent" className="w-full h-16 text-lg bg-gradient-to-r from-[#1400FF] to-[#796eff] border-none hover:opacity-90">Get Growth Plan</Button>
-            </SectionReveal>
-
-            {/* Premium Plan */}
-            <SectionReveal>
-              <DottedContainer as="div" className="bg-white p-10 rounded-[40px] border border-[#E0E0E0] shadow-xl hover:shadow-[0_0_20px_rgba(20,0,255,0.15)] transition-shadow duration-300 h-full">
-                <h3 className="text-3xl font-black mb-2">Premium</h3>
-                <p className="text-[#4A4A4A] font-medium mb-8 pb-8 border-b border-[#E0E0E0]">Best for authority building & high volume</p>
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-6xl font-black">$2,499</span>
-                  <span className="text-[#4A4A4A] font-bold">/mo</span>
-                </div>
-                <ul className="space-y-4 mb-10">
-                  {['25 Authority Reels', 'Full Brand Strategy', 'Content Funnel Design', 'Scripting & Premium Editing', '48-Hour Delivery', '24/7 Priority Support'].map((f, i) => (
-                    <li key={i} className="flex items-center gap-3 font-medium text-[#1A1A1A]"><Check className="w-5 h-5 text-[#1400FF]" />{f}</li>
-                  ))}
-                </ul>
-                <Button onClick={() => window.open('https://mail.google.com/mail/?view=cm&fs=1&to=contact@kreativroom.com&su=Inquiry:%20Premium%20Plan&body=Hi%20KreativRoom%20Team,%0A%0AI%20am%20interested%20in%20the%20Premium%20Plan.%20Please%20let%20me%20know%20how%20to%20proceed.%0A%0AThanks!', '_blank')} variant="outline" className="w-full h-16 text-lg">Get Premium Plan</Button>
-              </DottedContainer>
-            </SectionReveal>
-          </div>
+          {/* Monthly / Yearly Toggle */}
+          <PricingToggle />
         </div>
       </section>
 
