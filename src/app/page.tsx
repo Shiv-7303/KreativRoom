@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useInView, HTMLMotionProps, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, useSpring, HTMLMotionProps, AnimatePresence } from "framer-motion";
 import {
   ArrowUpRight, Star, X, Check, Play, Menu, Eye, Users, Clock, BarChart3
 } from "lucide-react";
@@ -72,28 +72,29 @@ const SectionReveal = ({ children, className, delay = 0 }: { children: React.Rea
 const AnimatedNumber = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [displayValue, setDisplayValue] = useState(0);
+  
+  const spring = useSpring(0, {
+    stiffness: 40,
+    damping: 20,
+  });
+
+  const display = useTransform(spring, (current) => 
+    Math.round(current).toLocaleString()
+  );
 
   useEffect(() => {
     if (isInView) {
-      let start = 0;
-      const end = value;
-      const duration = 2000;
-      const increment = end / (duration / 16);
-      const timer = setInterval(() => {
-        start += increment;
-        if (start > end) {
-          setDisplayValue(end);
-          clearInterval(timer);
-        } else {
-          setDisplayValue(Math.floor(start));
-        }
-      }, 16);
-      return () => clearInterval(timer);
+      spring.set(value);
     }
-  }, [value, isInView]);
+  }, [value, isInView, spring]);
 
-  return <span ref={ref}>{prefix}{displayValue.toLocaleString()}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {prefix && <span>{prefix}</span>}
+      <motion.span>{display}</motion.span>
+      {suffix && <span>{suffix}</span>}
+    </span>
+  );
 };
 
 
@@ -216,67 +217,62 @@ const PLANS = {
   ],
 };
 
-// Animated price that counts up/down on plan change
+// ── True odometer / slot-machine animation ─────────────────────────────────
+// Each slot = column of 0-9 stacked; we translateY to reveal the right digit,
+// exactly like the vanilla JS reference code the user shared.
+const TickerDigit = ({ digit }: { digit: number }) => (
+  <span
+    style={{
+      display: 'inline-block',
+      overflow: 'hidden',
+      height: '1.12em',
+      verticalAlign: 'top',
+    }}
+  >
+    <motion.span
+      animate={{ y: `-${digit * 10}%` }}
+      transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
+      style={{ display: 'flex', flexDirection: 'column' }}
+    >
+      {Array.from({ length: 10 }, (_, i) => (
+        <span
+          key={i}
+          style={{ height: '1.12em', lineHeight: '1.12', display: 'block', textAlign: 'center' }}
+        >
+          {i}
+        </span>
+      ))}
+    </motion.span>
+  </span>
+);
+
+// Animated price — splits into TickerDigit per digit, commas stay static
 const AnimatedPrice = ({ value }: { value: number }) => {
-  const [display, setDisplay] = useState(value);
-  const prev = useRef(value);
-
-  useEffect(() => {
-    const from = prev.current;
-    const to = value;
-    prev.current = value;
-    if (from === to) return;
-
-    const duration = 500;
-    const steps = 30;
-    const stepTime = duration / steps;
-    const diff = to - from;
-    let step = 0;
-
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-      setDisplay(Math.round(from + diff * eased));
-      if (step >= steps) { setDisplay(to); clearInterval(timer); }
-    }, stepTime);
-
-    return () => clearInterval(timer);
-  }, [value]);
-
-  return <span>{display.toLocaleString()}</span>;
+  const formatted = value.toLocaleString();
+  return (
+    <>
+      {formatted.split('').map((char, i) =>
+        char === ',' || char === '.' ? (
+          <span key={i} style={{ display: 'inline-block' }}>{char}</span>
+        ) : (
+          <TickerDigit key={i} digit={parseInt(char)} />
+        )
+      )}
+    </>
+  );
 };
 
-// Animated reel count that counts up/down
-const AnimatedReelCount = ({ value, label }: { value: number; label: string }) => {
-  const [display, setDisplay] = useState(value);
-  const prev = useRef(value);
+// Animated reel count — same odometer mechanic
+const AnimatedReelCount = ({ value, label }: { value: number; label: string }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+    {String(value).split('').map((char, i) => (
+      <TickerDigit key={i} digit={parseInt(char)} />
+    ))}
+    <span>&nbsp;{label}</span>
+  </span>
+);
+// ───────────────────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    const from = prev.current;
-    const to = value;
-    prev.current = value;
-    if (from === to) return;
-
-    const duration = 500;
-    const steps = 25;
-    const stepTime = duration / steps;
-    const diff = to - from;
-    let step = 0;
-
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(from + diff * eased));
-      if (step >= steps) { setDisplay(to); clearInterval(timer); }
-    }, stepTime);
-
-    return () => clearInterval(timer);
-  }, [value]);
-
-  return <>{display} {label}</>;
-};
 
 const PricingToggle = () => {
   const [isYearly, setIsYearly] = useState(false);
